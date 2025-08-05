@@ -1,13 +1,21 @@
-"use client";
 
-import { getDefaultConfig } from '@rainbow-me/rainbowkit';
-import { anvil, mainnet, zksync } from 'wagmi/chains';
+import { getDefaultConfig, darkTheme } from "@rainbow-me/rainbowkit";
+import { mainnet, polygon, sepolia, zksync, anvil } from "wagmi/chains";
 
-const config = getDefaultConfig({
-  appName: 'Token-Gated Demo',
-  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
-  chains: [mainnet, anvil, zksync],
+export const chains = [mainnet, polygon, zksync, sepolia, anvil] as const;
+
+export const wagmiConfig = getDefaultConfig({
+  appName: "Token gated demo",
+  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!, 
+  chains,
   ssr: false,
 });
 
-export default config;
+// Create a dark theme with your brand colors:
+export const rkTheme = darkTheme({
+  accentColor:        '#7D3C98',   // your primary brand accent
+  accentColorForeground: '#fff',   // text/icon on accent backgrounds
+  borderRadius:       'small',     // none / small / medium / large / full
+  fontStack:          'system',    // system / rounded / mono
+  overlayBlur:        'small',     // none / small / medium / large
+});
