@@ -9,14 +9,17 @@ const { ethers } = hardhat;
 describe("BasicNft", function () {
   let nft: BasicNft;
   let deployer: Signer;
-  const BASE_URI = "ipfs://QmYourBaseCid/";
+  const BASE_URI = "ipfs://QmRsfjCUK4BRbWDA25NMeqUwW87avDWPZ2xZgvt9ZTb3AY";
   const MAX_SUPPLY = 3;
   const PRICE = ethers.parseEther("0.0001"); // returns a bigint
 
   beforeEach(async () => {
     [deployer] = await ethers.getSigners();
 
-    const factory = (await ethers.getContractFactory("BasicNft", deployer)) as BasicNft__factory;
+    const factory = (await ethers.getContractFactory(
+      "BasicNft",
+      deployer
+    )) as BasicNft__factory;
     nft = await factory.deploy(BASE_URI, MAX_SUPPLY, PRICE);
   });
 
@@ -37,7 +40,7 @@ describe("BasicNft", function () {
   it("should revert on wrong price", async () => {
     await expect(
       nft.connect(deployer).mint({ value: PRICE - 1n })
-    ).to.be.revertedWith("WrongPrice");
+    ).to.be.revertedWith("WrongPrice"); // or use .to.be.revertedWithCustomError(nft, "WrongPrice")
   });
 
   it("should revert when sold out", async () => {
@@ -47,7 +50,7 @@ describe("BasicNft", function () {
 
     await expect(
       nft.connect(deployer).mint({ value: PRICE })
-    ).to.be.revertedWith("SoldOut");
+    ).to.be.revertedWith("SoldOut"); // or use .to.be.revertedWithCustomError(nft, "SoldOut")
   });
 
   it("exposes maxSupply & mintPrice getters", async () => {
