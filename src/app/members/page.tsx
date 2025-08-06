@@ -8,18 +8,25 @@ import { ethers } from "ethers";
 export default function MembersPage() {
   const { address, isConnected } = useAccount();
   const [isMember, setIsMember] = useState<boolean | null>(null);
+  const [balance, setBalance] = useState<bigint>(0n);
   
   const contractAddress = process.env
     .NEXT_PUBLIC_NFT_CONTRACT_ADDRESS! as `0x${string}`;
   const BasicNftAbi = basicNftJson as unknown as Abi;
 
-  const { data: balance, isFetching } = useContractRead({
+  const { data, isFetching } = useContractRead({
     address: contractAddress,
     abi: BasicNftAbi,
     functionName: "balanceOf",
     args: [address ?? ethers.ZeroAddress],
     query: { enabled: isConnected },
   });
+
+  useEffect(() => {
+    if (typeof data === "bigint") {
+      setBalance(data);
+    }
+  }, [data]);
 
   useEffect(() => {
     if (typeof balance === "bigint") {
@@ -30,8 +37,13 @@ export default function MembersPage() {
   return (
     <div className="">
       <div className="w-full max-w-lg  backdrop-blur-md p-8 rounded-3xl shadow-2xl text-white space-y-8">
-        <h1 className="text-3xl font-bold text-center">Members Area</h1>
+        <h1 className="text-3xl font-bold text-center">Members Area</h1> 
 
+         <p className="text-center text-lg">
+          You hold <strong>{balance.toString()}</strong> NFT
+          {balance > 1n ? 's' : ''}. Enjoy your exclusive content!
+        </p>
+        
         {!isConnected ? (
           <p className="text-center text-lg">
             🔒 Please connect your wallet to view this page.
