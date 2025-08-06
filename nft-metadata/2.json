@@ -1,7 +1,7 @@
 {
-  "name": "Gold Membership NFT #0",
+  "name": "Gold Membership NFT #2",
   "description": "Exclusive membership access for premium users of the platform.",
-  "image": "ipfs://QmcKdYSWC3mEyrhNP5wwsmUYaNC1zBfowXmhxA6hYVMDXu",
+  "image": "ipfs://QmbrfTqsDFJPZcnbwj29aLL29RA3cLwQmVEYPwHUskD8To",
   "attributes": [
     {
       "trait_type": "Membership Level",
@@ -17,7 +17,7 @@
     },
     {
       "trait_type": "Edition",
-      "value": 1
+      "value": 3
     },
     {
       "display_type": "date",
