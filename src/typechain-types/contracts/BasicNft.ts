@@ -32,6 +32,7 @@ export interface BasicNftInterface extends Interface {
       | "getMaxSupply"
       | "getMintPrice"
       | "isApprovedForAll"
+      | "isSoldOut"
       | "maxSupply"
       | "mint"
       | "mintPrice"
@@ -87,6 +88,7 @@ export interface BasicNftInterface extends Interface {
     functionFragment: "isApprovedForAll",
     values: [AddressLike, AddressLike]
   ): string;
+  encodeFunctionData(functionFragment: "isSoldOut", values?: undefined): string;
   encodeFunctionData(functionFragment: "maxSupply", values?: undefined): string;
   encodeFunctionData(functionFragment: "mint", values?: undefined): string;
   encodeFunctionData(functionFragment: "mintPrice", values?: undefined): string;
@@ -153,6 +155,7 @@ export interface BasicNftInterface extends Interface {
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "isSoldOut", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "maxSupply", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mintPrice", data: BytesLike): Result;
@@ -384,6 +387,8 @@ export interface BasicNft extends BaseContract {
     "view"
   >;
 
+  isSoldOut: TypedContractMethod<[], [boolean], "view">;
+
   maxSupply: TypedContractMethod<[], [bigint], "view">;
 
   mint: TypedContractMethod<[], [void], "payable">;
@@ -477,6 +482,9 @@ export interface BasicNft extends BaseContract {
     [boolean],
     "view"
   >;
+  getFunction(
+    nameOrSignature: "isSoldOut"
+  ): TypedContractMethod<[], [boolean], "view">;
   getFunction(
     nameOrSignature: "maxSupply"
   ): TypedContractMethod<[], [bigint], "view">;
