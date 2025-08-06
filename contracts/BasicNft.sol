@@ -28,11 +28,10 @@ contract BasicNft is ERC721, ERC721URIStorage, Ownable {
      * @param maxSupply_     The total number of tokens allowed
      * @param mintPriceWei_  The price in wei to mint a single token
      */
-    constructor(
-        string memory baseTokenUri_,
-        uint256 maxSupply_,
-        uint256 mintPriceWei_
-    ) ERC721("MembershipNFT", "MNFT") Ownable(msg.sender) {
+    constructor(string memory baseTokenUri_, uint256 maxSupply_, uint256 mintPriceWei_)
+        ERC721("MembershipNFT", "MNFT")
+        Ownable(msg.sender)
+    {
         _baseTokenUri = baseTokenUri_;
         maxSupply = maxSupply_;
         mintPrice = mintPriceWei_;
@@ -41,8 +40,12 @@ contract BasicNft is ERC721, ERC721URIStorage, Ownable {
 
     /// @dev Modifier to ensure tokens remain available
     modifier notSoldOut() {
-        require(_tokenCounter < maxSupply, "SoldOut");
+        require(!isSoldOut(), "SoldOut");
         _;
+    }
+
+    function isSoldOut() public view returns (bool) {
+        return _tokenCounter >= maxSupply;
     }
 
     /// @dev Modifier to ensure the caller paid exactly the mint price
@@ -61,24 +64,10 @@ contract BasicNft is ERC721, ERC721URIStorage, Ownable {
      * @notice Mint one NFT, requiring exact `mintPrice` payment
      * @dev Emits a {Minted} event
      */
-    function mint()
-        external
-        payable
-        notSoldOut
-        correctPrice
-    {
+    function mint() external payable notSoldOut correctPrice {
         uint256 tokenId = _tokenCounter++;
         _safeMint(msg.sender, tokenId);
-        _setTokenURI(
-            tokenId,
-            string(
-                abi.encodePacked(
-                    _baseTokenUri,
-                    tokenId.toString(),
-                    ".json"
-                )
-            )
-        );
+        _setTokenURI(tokenId, string(abi.encodePacked(_baseTokenUri, tokenId.toString(), ".json")));
         emit Minted(msg.sender, tokenId);
     }
 
@@ -86,11 +75,7 @@ contract BasicNft is ERC721, ERC721URIStorage, Ownable {
      * @notice Withdraw all ETH from the contract to the owner
      * @dev Only callable by the owner; emits a {Withdrawn} event
      */
-    function withdraw()
-        external
-        onlyOwner
-        hasFunds
-    {
+    function withdraw() external onlyOwner hasFunds {
         uint256 balance = address(this).balance;
         payable(owner()).transfer(balance);
         emit Withdrawn(owner(), balance);
@@ -118,22 +103,12 @@ contract BasicNft is ERC721, ERC721URIStorage, Ownable {
     }
 
     /// @dev Override required by ERC721URIStorage
-    function tokenURI(uint256 tokenId)
-        public
-        view
-        override(ERC721, ERC721URIStorage)
-        returns (string memory)
-    {
+    function tokenURI(uint256 tokenId) public view override(ERC721, ERC721URIStorage) returns (string memory) {
         return super.tokenURI(tokenId);
     }
 
     /// @dev Override required to resolve multiple supportsInterface implementations
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        override(ERC721, ERC721URIStorage)
-        returns (bool)
-    {
+    function supportsInterface(bytes4 interfaceId) public view override(ERC721, ERC721URIStorage) returns (bool) {
         return super.supportsInterface(interfaceId);
     }
 }
