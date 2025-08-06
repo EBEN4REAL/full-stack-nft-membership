@@ -1,7 +1,7 @@
 "use client";
 import { useAccount, useContractRead } from "wagmi";
 import type { Abi } from "abitype";
-import basicNftJson from "@/abis/BasicNft.json";
+import basicNftJson from "@/abis/contracts/BasicNft.sol/BasicNft.json";
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 
